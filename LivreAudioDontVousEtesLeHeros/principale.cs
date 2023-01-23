@@ -20,9 +20,6 @@ namespace LivreAudioDontVousEtesLeHeros
 {
     public partial class principale : Form
     {
-        static private readonly string clée = null;
-        static private readonly string région = null;
-
         private int entréeAudio;
         private int sortieAudio;
 
@@ -256,8 +253,8 @@ namespace LivreAudioDontVousEtesLeHeros
         {
             if(speechSynthesizer == null)
             {
-                if (string.IsNullOrWhiteSpace(clée) || string.IsNullOrWhiteSpace(région)) return null;
-                SpeechConfig speechConfig = SpeechConfig.FromSubscription(clée, région);
+                if (string.IsNullOrWhiteSpace(txtAzureAPK.Text) || string.IsNullOrWhiteSpace(txtAzureReg.Text)) return null;
+                SpeechConfig speechConfig = SpeechConfig.FromSubscription(txtAzureAPK.Text, txtAzureReg.Text);
                 speechConfig.SpeechSynthesisLanguage = "fr-FR";
                 speechConfig.SetSpeechSynthesisOutputFormat(SpeechSynthesisOutputFormat.Audio48Khz96KBitRateMonoMp3);
                 speechSynthesizer = new SpeechSynthesizer(speechConfig);
