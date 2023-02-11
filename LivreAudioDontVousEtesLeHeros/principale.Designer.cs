@@ -35,11 +35,12 @@ namespace LivreAudioDontVousEtesLeHeros
             this.timeOut = new System.Windows.Forms.Timer(this.components);
             this.btPasser = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
-            this.txtApk = new System.Windows.Forms.TextBox();
+            this.txtOpenAIApk = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtAzureAPK = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.txtAzureReg = new System.Windows.Forms.TextBox();
+            this.txtAction = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // tmr
@@ -79,13 +80,14 @@ namespace LivreAudioDontVousEtesLeHeros
             this.label4.TabIndex = 15;
             this.label4.Text = "OpenAI APK :";
             // 
-            // txtApk
+            // txtOpenAIApk
             // 
-            this.txtApk.Location = new System.Drawing.Point(160, 11);
-            this.txtApk.Name = "txtApk";
-            this.txtApk.PasswordChar = '*';
-            this.txtApk.Size = new System.Drawing.Size(311, 22);
-            this.txtApk.TabIndex = 14;
+            this.txtOpenAIApk.Location = new System.Drawing.Point(160, 11);
+            this.txtOpenAIApk.Name = "txtOpenAIApk";
+            this.txtOpenAIApk.PasswordChar = '*';
+            this.txtOpenAIApk.Size = new System.Drawing.Size(311, 22);
+            this.txtOpenAIApk.TabIndex = 14;
+            this.txtOpenAIApk.TextChanged += new System.EventHandler(this.txtApk_TextChanged);
             // 
             // label1
             // 
@@ -103,6 +105,7 @@ namespace LivreAudioDontVousEtesLeHeros
             this.txtAzureAPK.PasswordChar = '*';
             this.txtAzureAPK.Size = new System.Drawing.Size(311, 22);
             this.txtAzureAPK.TabIndex = 16;
+            this.txtAzureAPK.TextChanged += new System.EventHandler(this.txtAzureAPK_TextChanged);
             // 
             // label2
             // 
@@ -120,6 +123,17 @@ namespace LivreAudioDontVousEtesLeHeros
             this.txtAzureReg.PasswordChar = '*';
             this.txtAzureReg.Size = new System.Drawing.Size(311, 22);
             this.txtAzureReg.TabIndex = 18;
+            this.txtAzureReg.Text = "francecentral";
+            this.txtAzureReg.TextChanged += new System.EventHandler(this.txtAzureReg_TextChanged);
+            // 
+            // txtAction
+            // 
+            this.txtAction.Enabled = false;
+            this.txtAction.Location = new System.Drawing.Point(57, 925);
+            this.txtAction.Name = "txtAction";
+            this.txtAction.Size = new System.Drawing.Size(1674, 22);
+            this.txtAction.TabIndex = 20;
+            this.txtAction.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtAction_KeyPress);
             // 
             // principale
             // 
@@ -127,12 +141,13 @@ namespace LivreAudioDontVousEtesLeHeros
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1840, 976);
+            this.Controls.Add(this.txtAction);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.txtAzureReg);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtAzureAPK);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.txtApk);
+            this.Controls.Add(this.txtOpenAIApk);
             this.Controls.Add(this.btPasser);
             this.Controls.Add(this.txtBx);
             this.DoubleBuffered = true;
@@ -153,11 +168,12 @@ namespace LivreAudioDontVousEtesLeHeros
         private System.Windows.Forms.Timer timeOut;
         private System.Windows.Forms.Button btPasser;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox txtApk;
+        private System.Windows.Forms.TextBox txtOpenAIApk;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtAzureAPK;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtAzureReg;
+        private System.Windows.Forms.TextBox txtAction;
     }
 }
 

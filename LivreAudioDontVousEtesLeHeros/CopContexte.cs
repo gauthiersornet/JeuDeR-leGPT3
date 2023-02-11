@@ -260,6 +260,13 @@ namespace LivreAudioDontVousEtesLeHeros
             openAIClient.HttpResponseReceived += new EventHandler<Universal.Common.Net.Http.HttpResponseReceivedEventArgs>(httpResponseReceivedEvent);
         }
 
+        public void ChangerAPK(string apikey)
+        {
+            openAIClient.Dispose();
+            openAIClient = new OpenAIClient(apikey);
+            openAIClient.HttpResponseReceived += new EventHandler<Universal.Common.Net.Http.HttpResponseReceivedEventArgs>(httpResponseReceivedEvent);
+        }
+
         static public int calculerNombreJeton(string str)
         {
             if (str != null)
@@ -329,47 +336,61 @@ namespace LivreAudioDontVousEtesLeHeros
         {
             var http = httpresp.Response.Content.ReadAsStringAsync();
             http.GetAwaiter().GetResult();
-            string[] strTab = http.Result.Split('\n');
-            string sAcc = "";
-            bool done = false;
-            foreach(string s in strTab)
+            if (http.Result.StartsWith("{\n    \"error\": {"))
             {
-                if (s != "")
-                {
-                    if (s == "data: [DONE]")
-                    {
-                        done = true;
-                        break;
-                    }
-                    else
-                    {
-                        JObject js = JObject.Parse("{" + s + "}");
-                        string r = js["data"]["choices"][0]["text"].ToString();
-                        sAcc += r;
-                    }
-                }
-            }
-
-            acc_completion += sAcc;
-            //if (frm.InvokeRequired)
-            //{
-            //    frm.BeginInvoke((dlgEvtMessage)frm.evt, new object[] { sAcc, true });
-            //}
-            //else
-            //{
-            //    frm.evt_NouveauMessage(sAcc, false);
-            //}
-
-            if(done)
-            {
-                TraiterComplétion(acc_completion);
                 if (frm.InvokeRequired)
                 {
-                    frm.BeginInvoke((dlgEvtMessage)frm.evt_MessageMJ, new object[] { acc_completion, true });
+                    frm.BeginInvoke((dlgEvtMessage)frm.evt_MessageMJ, new object[] { "Erreur d'accès OpenAI.", true });
                 }
                 else
                 {
                     frm.evt_MessageMJ(acc_completion, false);
+                }
+            }
+            else
+            {
+                string[] strTab = http.Result.Split('\n');
+                string sAcc = "";
+                bool done = false;
+                foreach (string s in strTab)
+                {
+                    if (s != "")
+                    {
+                        if (s == "data: [DONE]")
+                        {
+                            done = true;
+                            break;
+                        }
+                        else
+                        {
+                            JObject js = JObject.Parse("{" + s + "}");
+                            string r = js["data"]["choices"][0]["text"].ToString();
+                            sAcc += r;
+                        }
+                    }
+                }
+
+                acc_completion += sAcc;
+                //if (frm.InvokeRequired)
+                //{
+                //    frm.BeginInvoke((dlgEvtMessage)frm.evt, new object[] { sAcc, true });
+                //}
+                //else
+                //{
+                //    frm.evt_NouveauMessage(sAcc, false);
+                //}
+
+                if (done)
+                {
+                    TraiterComplétion(acc_completion);
+                    if (frm.InvokeRequired)
+                    {
+                        frm.BeginInvoke((dlgEvtMessage)frm.evt_MessageMJ, new object[] { acc_completion, true });
+                    }
+                    else
+                    {
+                        frm.evt_MessageMJ(acc_completion, false);
+                    }
                 }
             }
         }

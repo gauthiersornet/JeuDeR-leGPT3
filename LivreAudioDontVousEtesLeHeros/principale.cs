@@ -131,7 +131,12 @@ namespace LivreAudioDontVousEtesLeHeros
                     catch { }
                 }
             }
-            if (!GénérerDire(message)) ActiverAudioMicro();
+            if (!GénérerDire(message))
+            {
+                txtAction.Enabled = true;
+                etatChoix = true;
+                ActiverAudioMicro();
+            }
         }
 
         //int hyster = 0;
@@ -202,6 +207,7 @@ namespace LivreAudioDontVousEtesLeHeros
             if(copContex != null && etatChoix)
             {
                 etatChoix = false;
+                txtAction.Enabled = false;
                 FermerAudioMicro();
 
                 CancellationToken tk = cclTkn;
@@ -470,6 +476,7 @@ namespace LivreAudioDontVousEtesLeHeros
             if (copContex != null)
             {
                 etatChoix = true;
+                txtAction.Enabled = true;
                 ActiverAudioMicro();
                 //switch (livre.Etat)
                 //{
@@ -568,6 +575,7 @@ namespace LivreAudioDontVousEtesLeHeros
                     }
 
                     etatChoix = false;
+                    txtAction.Enabled = false;
 
                     int l = fic.LastIndexOf('\\');
                     if (l < 0) l = fic.LastIndexOf('/');
@@ -581,7 +589,7 @@ namespace LivreAudioDontVousEtesLeHeros
                     {
                         debut = File.ReadAllText(fic);
                         CopContexte.SCopType cpt = new CopContexte.SCopType("jeux de rôle", null, null, CopContexte.EMoteur.TextDavinci003, "\r\nMJ : ", Color.DarkBlue, "\r\nH : ", Color.DarkGreen, true, null, null, null, null, 1024, new string[] { "H : ", "MJ : " }, "Ce qui suit est un jeu de rôle avec un mâitre du jeu d'MJ. Le mâitre du jeu est serviable, créatif et très amical. Il début l'aventure ainsi :\n\n" + debut);
-                        copContex = new CopContexte(cpt, txtApk.Text, this);
+                        copContex = new CopContexte(cpt, txtOpenAIApk.Text, this);
                         GénérerDire(debut);
                     }
                     catch (System.IO.FileNotFoundException ex)
@@ -623,6 +631,64 @@ namespace LivreAudioDontVousEtesLeHeros
         private void btPasser_Click(object sender, EventArgs e)
         {
             if (waveOut != null) waveOut.Stop();
+        }
+
+        private void txtAzureAPK_TextChanged(object sender, EventArgs e)
+        {
+            SpeechSynthesizer ss = speechSynthesizer;
+            if (ss != null)
+            {
+                lock (ss)
+                {
+                    speechSynthesizer = null;
+                    ss.Dispose();
+                }
+                ss = null;
+            }
+        }
+
+        private void txtAzureReg_TextChanged(object sender, EventArgs e)
+        {
+            SpeechSynthesizer ss = speechSynthesizer;
+            if (ss != null)
+            {
+                lock (ss)
+                {
+                    speechSynthesizer = null;
+                    ss.Dispose();
+                }
+                ss = null;
+            }
+        }
+
+        private void txtApk_TextChanged(object sender, EventArgs e)
+        {
+            copContex.ChangerAPK(txtOpenAIApk.Text);
+        }
+
+        private void ResetRecognizer()
+        {
+            if (vRecognizer != null) vRecognizer.Reset();
+        }
+
+        private bool MicroOn { get => (waveIn != null); }
+
+        private void txtAction_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (etatChoix)
+            {
+                if (MicroOn && txtAction.Text != "")
+                {
+                    FermerAudioMicro();
+                    ResetRecognizer();
+                }
+                if (e.KeyChar == '\r')
+                {
+                    string s = txtAction.Text;
+                    txtAction.Text = "";
+                    MessageSTTIn(s);
+                }
+            }
         }
     }
 }
